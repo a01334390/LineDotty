@@ -11,7 +11,7 @@ import UIKit
 class ViewController: UIViewController {
     
     var currentLevel = 0 // Current Level to display
-    var connections = [UIView]() // Connection dots to display
+    var connections = [ConnectionView]() // Connection dots to display
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
         connections.removeAll()
         // Add five draggable areas every time
         for _ in 1...(currentLevel + 4) {
-            let connection = UIView(frame: CGRect(origin: .zero, size: CGSize(width: 44, height: 44)))
+            let connection = ConnectionView (frame: CGRect(origin: .zero, size: CGSize(width: 44, height: 44)))
             connection.backgroundColor = .white
             connection.layer.cornerRadius = 22
             connection.layer.borderWidth = 2
