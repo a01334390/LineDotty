@@ -13,17 +13,31 @@ class ViewController: UIViewController {
     var currentLevel = 0 // Current Level to display
     var connections = [ConnectionView]() // Connection dots to display
     let renderedLines = UIImageView() // Core Graphics
+    let scoreLabel = UILabel()
+    
+    var score = 0 {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         renderedLines.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(renderedLines)
+        score = 0
+        scoreLabel.textColor = .cyan
+        scoreLabel.font = UIFont.boldSystemFont(ofSize: 24)
+        scoreLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scoreLabel)
         NSLayoutConstraint.activate([
             renderedLines.topAnchor.constraint(equalTo: view.topAnchor),
             renderedLines.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             renderedLines.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            renderedLines.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            renderedLines.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scoreLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            scoreLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         levelUp()
     }
@@ -86,6 +100,7 @@ class ViewController: UIViewController {
     
     func checkMove() {
         if levelClear() {
+            score += currentLevel * 2
             view.isUserInteractionEnabled = false
             UIView.animate(withDuration: 0.5,
                            delay: 1,
@@ -102,7 +117,7 @@ class ViewController: UIViewController {
                             self.levelUp()
             })
         } else {
-            
+            score -= 1
         }
     }
     
