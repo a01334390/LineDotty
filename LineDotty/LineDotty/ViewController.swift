@@ -12,10 +12,19 @@ class ViewController: UIViewController {
     
     var currentLevel = 0 // Current Level to display
     var connections = [ConnectionView]() // Connection dots to display
+    let renderedLines = UIImageView() // Core Graphics
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        renderedLines.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(renderedLines)
+        NSLayoutConstraint.activate([
+            renderedLines.topAnchor.constraint(equalTo: view.topAnchor),
+            renderedLines.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            renderedLines.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            renderedLines.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
         levelUp()
     }
     
@@ -50,9 +59,31 @@ class ViewController: UIViewController {
             connection.layer.borderWidth = 2
             connections.append(connection)
             view.addSubview(connection)
+            
+            connection.dragChanged = { [weak self] in
+                self?.redrawLines()
+            }
+        }
+        // Connect each dot with each other
+        for i in 0 ..< connections.count {
+            if i == connections.count - 1 {
+                connections[i].after = connections[0]
+            } else {
+                connections[i].after = connections[i + 1]
+            }
         }
         
         connections.forEach ( place )
+    }
+    
+    func redrawLines() {
+        let render = UIGraphicsImageRenderer(bounds: view.bounds)
+        renderedLines.image = render.image { ctx in
+            for connection in connections {
+                UIColor.green.set()
+                ctx.cgContext.strokeLineSegments(between: [connection.after.center, connection.center])
+            }
+        }
     }
 
 
