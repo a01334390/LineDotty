@@ -34,4 +34,13 @@ class ConnectionView: UIView {
         dragChanged?()
     }
     
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        transform = .identity
+        dragFinished?()
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        touchesEnded(touches, with: event)
+    }
+    
 }
