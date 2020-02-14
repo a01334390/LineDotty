@@ -20,6 +20,17 @@ class ViewController: UIViewController {
     }
     
     /**
+        Places the dots into the super view
+        - Parameters:
+            - connection : UIView as a connection to be placed
+     */
+    func place(_ connection : UIView) {
+        let randomX = CGFloat.random(in: 20...view.bounds.maxX - 20)
+        let randomY = CGFloat.random(in: 50...view.bounds.maxY - 50)
+        connection.center = CGPoint(x: randomX, y: randomY)
+    }
+    
+    /**
         Creates a new and harder level
      - Returns:
             - Void
@@ -40,6 +51,8 @@ class ViewController: UIViewController {
             connections.append(connection)
             view.addSubview(connection)
         }
+        
+        connections.forEach ( place )
     }
 
 
