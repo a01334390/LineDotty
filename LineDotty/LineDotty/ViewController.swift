@@ -63,6 +63,10 @@ class ViewController: UIViewController {
             connection.dragChanged = { [weak self] in
                 self?.redrawLines()
             }
+            
+            connection.dragFinished = { [weak self] in
+                self?.checkMove()
+            }
         }
         // Connect each dot with each other
         for i in 0 ..< connections.count {
@@ -73,8 +77,33 @@ class ViewController: UIViewController {
             }
         }
         
-        connections.forEach ( place )
+        repeat {
+            connections.forEach ( place )
+        } while levelClear()
+        
         redrawLines()
+    }
+    
+    func checkMove() {
+        if levelClear() {
+            view.isUserInteractionEnabled = false
+            UIView.animate(withDuration: 0.5,
+                           delay: 1,
+                           options: [],
+                           animations: {
+                            self.renderedLines.alpha = 0
+                            for connection in self.connections {
+                                connection.alpha = 0
+                            }
+            },
+                           completion: { finished in
+                            self.view.isUserInteractionEnabled = true
+                            self.renderedLines.alpha = 1
+                            self.levelUp()
+            })
+        } else {
+            
+        }
     }
     
     func redrawLines() {
@@ -101,6 +130,20 @@ class ViewController: UIViewController {
                 ctx.cgContext.strokeLineSegments(between: [connection.after.center, connection.center])
             }
         }
+    }
+    
+    func levelClear() -> Bool {
+        for connection in connections {
+            for other in connections {
+                if linesCross(start1: connection.center,
+                              end1: connection.after.center,
+                              start2: other.center,
+                              end2: other.after.center) != nil {
+                    return false
+                }
+            }
+        }
+        return true
     }
     
     func linesCross(start1: CGPoint, end1: CGPoint, start2: CGPoint, end2: CGPoint) -> (x: CGFloat, y: CGFloat)? {
