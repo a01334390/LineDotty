@@ -26,4 +26,12 @@ class ConnectionView: UIView {
         superview?.bringSubviewToFront(self)
     }
     
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let point = touch.location(in: superview)
+        // Calculate our center
+        center = CGPoint(x: point.x - touchStartPos.x, y: point.y - touchStartPos.y)
+        dragChanged?()
+    }
+    
 }
