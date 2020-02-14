@@ -74,6 +74,7 @@ class ViewController: UIViewController {
         }
         
         connections.forEach ( place )
+        redrawLines()
     }
     
     func redrawLines() {
